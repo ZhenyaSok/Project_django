@@ -1,8 +1,10 @@
+from catalog.views import contacts, index, about_me
 from django.urls import path
-from catalog.views import index, contacts, about_me
+
 
 urlpatterns = [
     path('', index),
-    path('contacts/templates/contacts.html', contacts),
-    path('catalog/templates/catalog/about_me.html', about_me)
+    path('contacts/', contacts),
+    path('about_me/', about_me),
 ]
+
