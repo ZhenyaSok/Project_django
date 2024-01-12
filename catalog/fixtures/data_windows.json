@@ -1,0 +1,99 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Мебель",
+      "description": "Мебель дубовая"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Сервиз",
+      "description": "Сервиз китайский"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 3,
+    "fields": {
+      "name": "Бытовя техника",
+      "description": "Бытовя техника для кухни"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 4,
+    "fields": {
+      "name": "Материалы",
+      "description": "Строительные материалы"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Стол",
+      "description": "Стол круглый",
+      "picture": "",
+      "category": 1,
+      "price": 10000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Стул",
+      "description": "Стул со спинкой",
+      "picture": "",
+      "category": 1,
+      "price": 4000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "Чашки",
+      "description": "Чашки с узорами",
+      "picture": "",
+      "category": 2,
+      "price": 2000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  },
+    {
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+      "name": "Кофемашина",
+      "description": "Кофемашина Bosch",
+      "picture": "",
+      "category": 3,
+      "price": 55000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  },
+    {
+    "model": "catalog.product",
+    "pk": 5,
+    "fields": {
+      "name": "Бетон",
+      "description": "Бетон марки D400",
+      "picture": "",
+      "category": 4,
+      "price": 35000,
+      "date": "2023-10-15",
+      "last_date_chance": "2023-10-15"
+    }
+  }
+]
