@@ -9,7 +9,7 @@ class Command(BaseCommand):
         Category.objects.all().delete()
         Product.objects.all().delete()
 
-        with open('data.json', "r", encoding="UTF-8") as file:
+        with open('catalog/fixtures/data.json', "r", encoding="UTF-8") as file:
             data = json.load(file)
 
         products = []
