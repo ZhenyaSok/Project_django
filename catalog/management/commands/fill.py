@@ -1,9 +1,11 @@
+
 from django.core.management import BaseCommand
 from catalog.models import Product, Category
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+
         product_list = [
             {
                 "name": "Air Jordan 11 Retro",
@@ -15,6 +17,7 @@ class Command(BaseCommand):
                 "updated": "2024-01-09T17:51:50.024Z"
             }
         ]
+        Product.objects.all().delete()
 
         products_for_create = []
         for product_item in product_list:
