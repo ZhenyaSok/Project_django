@@ -1,6 +1,5 @@
 import json
 import os
-
 from django.core.management import BaseCommand
 from catalog.models import Category
 
