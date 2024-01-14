@@ -9,5 +9,5 @@ urlpatterns = [
     # path('contacts/', contacts, name='info'),
     # path('about_me/', about_me, name='about_me'),
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
