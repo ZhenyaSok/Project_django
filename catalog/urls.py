@@ -1,5 +1,5 @@
 from catalog.apps import CatalogConfig
-from catalog.views import index_main, ProductListView, about_me, contacts, CategoryListView, ProductUpdateView, \
+from catalog.views import IndexView, ProductListView, about_me, contacts, CategoryListView, ProductUpdateView, \
     ProductCreateView, ProductDeleteView
 from django.urls import path
 from django.conf import settings
@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 app_name = CatalogConfig.name
 
 urlpatterns = [
-    path('', index_main, name='index_main'),
+    path('', IndexView.as_view(), name='index_main'),
     path('categories/', CategoryListView.as_view(), name='categories'),
     path('<int:pk>/products/', ProductListView.as_view(), name='category_products'),
     path('products/create', ProductCreateView.as_view(), name='product_create'),
