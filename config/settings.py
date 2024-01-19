@@ -41,7 +41,8 @@ INSTALLED_APPS = [
 
     # apps
     'catalog'
-    # 'contacts'
+    # 'materials'
+
 ]
 
 MIDDLEWARE = [

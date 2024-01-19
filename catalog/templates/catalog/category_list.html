@@ -2,6 +2,9 @@
 
 {% block content %}
 <div class="row">
+    <div class="col-12 mb-5">
+        <a href="{% url 'catalog:product_create' %}" class="btn btn-primary">Создать Товар</a>
+    </div>
     {% for object in object_list %}
        {% include 'catalog/includes/inc_category.html' with object=object %}
     {% endfor %}
