@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-
 from catalog.models import Category, Product
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 
 def contacts(request):
     if request.method == 'POST':
@@ -19,36 +18,24 @@ def product_form(request):
 
         return render(request, 'catalog/product_form.html')
 
-def index_main(request):
-    context = {
-        'object_list': Category.objects.all()[:100],
-        'title': 'Магазин'
+
+
+class IndexView(TemplateView):
+    template_name = 'catalog/index_main.html'
+    extra_context = {
+        'title': 'Категории'
     }
-    return render(request, 'catalog/index_main.html', context)
 
-# class UbaListView(ListView):
-#     model =
-
-# def categories(request):
-#     context = {
-#         'object_list': Category.objects.all(),
-#         'title': 'Категории'
-#     }
-#     return render(request, 'catalog/category_list.html', context)
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = Category.objects.all()[:100]
+        return context_data
 
 class CategoryListView(ListView):
     model = Category
     extra_context = {
         'title': 'Категории'
     }
-
-# def category_products(request, pk):
-#     category_item = Category.objects.get(pk=pk)
-#     context = {
-#         'object_list': Product.objects.filter(category_id=pk),
-#         'title': f'{category_item.name}'
-#     }
-#     return render(request, 'catalog/product_list.html', context)
 
 class ProductListView(ListView):
     model = Product
@@ -83,7 +70,7 @@ class ProductUpdateView(UpdateView):
 
 class ProductDeleteView(DeleteView):
     model = Product
-    success_url = reverse_lazy('catalog:category_products')
+    success_url = reverse_lazy('catalog:categories')
 
 
 
