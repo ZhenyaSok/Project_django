@@ -39,8 +39,8 @@ def form(request):
         overview = request.POST.get('overview')
         print(f'({name}):{overview}')
     context = {
-        'name': Product.name,
-        'overview': Product.overview
+        Product.name: 'name',
+        Product.overview: 'overview'
     }
     return render(request, 'catalog/form.html', context)
 
