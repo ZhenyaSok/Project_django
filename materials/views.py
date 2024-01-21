@@ -2,6 +2,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 from materials.models import Material
 from django.urls import reverse_lazy, reverse
 from pytils.translit import slugify
+from .func_send import send_mail
 
 class MaterialCreateView(CreateView):
     model = Material
@@ -33,6 +34,8 @@ class MaterialDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
+        if self.object.views_count == 100:
+            send_mail()
         return self.object
 
 
