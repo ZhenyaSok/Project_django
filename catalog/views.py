@@ -12,6 +12,11 @@ def about_me(request):
     return render(request, 'catalog/about_me.html')
 
 def form(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        overview = request.POST.get('overview')
+        print(f'({name}):{overview}')
+
     return render(request, 'catalog/form.html')
 
 def index_main(request):
