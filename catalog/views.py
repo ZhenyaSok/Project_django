@@ -11,13 +11,13 @@ def contacts(request):
 def about_me(request):
     return render(request, 'catalog/about_me.html')
 
-def form(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        overview = request.POST.get('overview')
-        print(f'({name}):{overview}')
+# def form(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('name')
+#         overview = request.POST.get('overview')
+#         print(f'({name}):{overview}')
 
-    return render(request, 'catalog/form.html')
+#     return render(request, 'catalog/form.html')
 
 def index_main(request):
     context = {
@@ -32,6 +32,18 @@ def categories(request):
         'title': 'Категории'
     }
     return render(request, 'catalog/categories.html', context)
+
+def form(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        overview = request.POST.get('overview')
+        print(f'({name}):{overview}')
+    context = {
+        'name': Product.name,
+        'overview': Product.overview
+    }
+    return render(request, 'catalog/form.html', context)
+
 
 def category_products(request, pk):
     category_item = Category.objects.get(pk=pk)
