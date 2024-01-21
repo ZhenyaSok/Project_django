@@ -11,6 +11,9 @@ def contacts(request):
 def about_me(request):
     return render(request, 'catalog/about_me.html')
 
+def form(request):
+    return render(request, 'catalog/form.html')
+
 def index_main(request):
     context = {
         'object_list': Category.objects.all()[:100],
