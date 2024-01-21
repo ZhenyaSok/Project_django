@@ -3,22 +3,6 @@ from django.urls import reverse_lazy, reverse
 from catalog.models import Category, Product
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 
-def contacts(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        message = request.POST.get('message')
-        print(f'({email}):{message}')
-    return render(request, 'catalog/contacts.html')
-
-def about_me(request):
-    return render(request, 'catalog/about_me.html')
-
-def product_form(request):
-    if request.method == 'POST':
-
-        return render(request, 'catalog/product_form.html')
-
-
 
 class IndexView(TemplateView):
     template_name = 'catalog/index_main.html'
@@ -72,6 +56,17 @@ class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:categories')
 
+def contacts(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        print(f'({email}):{message}')
+    return render(request, 'catalog/contacts.html')
 
+def about_me(request):
+    return render(request, 'catalog/about_me.html')
 
+def product_form(request):
+    if request.method == 'POST':
 
+        return render(request, 'catalog/product_form.html')
