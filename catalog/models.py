@@ -35,3 +35,27 @@ class Product(models.Model):
         verbose_name = 'товар'
         verbose_name_plural = 'товары'
         ordering = ('price',)
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Наименование товара')
+    num_version = models.IntegerField(verbose_name='номер версии')
+    name_version = models.CharField(max_length=100, verbose_name='название версии')
+    version_flug = models.BooleanField(verbose_name='признак версии', default=False)
+
+    def __str__(self):
+        return f'{self.product} ({self.name_version})'
+
+    """
+    Добавьте новую модель «Версия», которая должна содержать следующие поля:
+    продукт,
+    номер версии,
+    название версии,
+    признак текущей версии.
+    При наличии активной версии реализуйте вывод в список продуктов информации об активной версии."""
+
+    class Meta:
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+
+

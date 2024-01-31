@@ -21,6 +21,7 @@ from .settings_local import (# noqa: F401
     EMAIL_PORT,
     EMAIL_USE_TLS,
     DEFAULT_FROM_EMAIL,
+
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
