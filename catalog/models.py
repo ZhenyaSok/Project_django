@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils import timezone
 
+from config import settings
 
-NULLABLE = {'null': True}
+NULLABLE = {'null':True, 'blank':True}
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Категория')
@@ -26,6 +27,8 @@ class Product(models.Model):
     overview = models.TextField(**NULLABLE, verbose_name='Описание')
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='пользователь')
 
 
     def __str__(self):

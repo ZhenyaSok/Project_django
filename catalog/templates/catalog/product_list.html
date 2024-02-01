@@ -11,6 +11,7 @@
                      alt="Card image cap">
                 <div class="card-body">
                     <p class="card-text">{{ object.name }}</p>
+                    <span class="text-muted">{{ object.owner|default:"Еще не было регистрации,тест" }}</span>
 
                     <div class="card-footer">
                         <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' object.pk %}">Изменить</a>
