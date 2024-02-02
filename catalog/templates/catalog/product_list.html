@@ -4,26 +4,23 @@
 
 <div class="row">
     {% for object in object_list %}
-        <div class="col-md-4">
-            <div class="card mb-4 box-shadow">
-                <img class="card-img-top"
-                     src = "{{ object.photo|mymedia }}"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <p class="card-text">{{ object.name }}</p>
-                    <span class="text-muted">{{ object.owner|default:"Еще не было регистрации,тест" }}</span>
-
-                    <div class="card-footer">
-                        <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' object.pk %}">Изменить</a>
-                        <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' object.pk %}">Удалить</a>
-
-                    </div>
-
+    <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+            <img class="card-img-top"
+                 src="{{ object.photo|mymedia }}"
+                 alt="Card image cap">
+            <div class="card-body">
+                <p class="card-text">{{ object.name }}</p>
+                <span class="text-muted">{{ object.owner|default:"Еще не было регистрации,тест" }}</span>
+                <div class="card-footer">
+                    <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' object.pk %}">Изменить</a>
+                    <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' object.pk %}">Удалить</a>
                 </div>
             </div>
         </div>
+    </div>
     {% endfor %}
-   <div class="col-12 mb-5">
+    <div class="col-12 mb-5">
         <a class="btn btn-outline-primary" href="{% url 'catalog:product_create' %}">Добавить товар</a>
     </div>
 </div>

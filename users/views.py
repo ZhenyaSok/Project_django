@@ -1,15 +1,19 @@
 import random
-
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView
-
+from django.views.generic import CreateView, UpdateView, TemplateView
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from config import settings, settings_local
 from users.forms import UserRegisterForm, UserForm
 from users.models import User
+from django.utils.encoding import force_bytes
+from django.views import View
+from django.contrib.auth import login
+from django.contrib.auth.views import PasswordResetDoneView
 
 
 class LoginView(BaseLoginView):
@@ -25,15 +29,25 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('users:login')
     template_name = 'users/register.html'
 
+
+
     def form_valid(self, form):
         new_user = form.save()
+        new_user.is_active = False
+        new_user.save()
+
+        token = default_token_generator.make_token(new_user)
+        uid = urlsafe_base64_encode(force_bytes(new_user.pk))
+        activation_url = reverse_lazy('users:confirm_email', kwargs={'uidb64': uid, 'token': token})
+
+        current_site = '127.0.0.1:8000'
         send_mail(
-            subject='Поздравляем с регистрацией!',
-            message='Вы успешно зарегистрированы на нашей платформе!',
+            subject='Почти готово!',
+            message=f"Завершите регистрацию, перейдя по ссылке: http://{current_site}{activation_url}",
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[new_user.email]
         )
-        return super().form_valid(form)
+        return redirect('users:email_senting')
 
 
 class UserUpdateView(UpdateView):
@@ -59,3 +73,34 @@ def generate_new_password(request):
 
 
 
+
+
+class UserConfirmEmailView(View):
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64)
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            login(request, user)
+            return redirect('users:email_confirmed')
+        else:
+            return redirect('users:email_info_failed')
+
+class UserConfirmView(TemplateView):
+    """ Выводит информацию об успешной регистрации пользователя """
+    template_name = 'users/registration_confirmed.html'
+
+class UserConfirmFailView(View):
+    """ Выводит информацию о невозможности зарегистрировать пользователя """
+    template_name = 'users/email_info_failed.html'
+
+
+class UserConfirmSentView(PasswordResetDoneView):
+    """ Выводит информацию об отправке на почту подтверждения регистрации """
+    template_name = "users/registration_sented.html"
