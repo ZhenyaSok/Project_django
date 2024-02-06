@@ -41,7 +41,7 @@ class MaterialDetailView(DetailView):
 
 
 
-class MaterialUpdateView(PermissionRequiredMixin, UpdateView):
+class MaterialUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Material
     fields = ('title', 'body')
     permission_required = ['materials.change_material']
@@ -58,7 +58,11 @@ class MaterialUpdateView(PermissionRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('materials:view', args=[self.kwargs.get('pk')])
 
-class MaterialDeleteView(DeleteView):
+class MaterialDeleteView(UserPassesTestMixin, DeleteView):
     model = Material
     success_url = reverse_lazy('materials:list')
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user or self.request.user.is_superuser \
+            or self.request.user.has_perms(['materials.delete_material'])
 
