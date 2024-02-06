@@ -44,7 +44,7 @@ class MaterialDetailView(DetailView):
 class MaterialUpdateView(PermissionRequiredMixin, UpdateView):
     model = Material
     fields = ('title', 'body')
-    permission_required = ['catalog.change_material']
+    permission_required = ['materials.change_material']
     # success_url = reverse_lazy('materials:list')
 
     def form_valid(self, form):
