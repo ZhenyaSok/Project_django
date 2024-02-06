@@ -1,4 +1,6 @@
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.http import Http404
+from django.views import View
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 from materials.models import Material
 from django.urls import reverse_lazy, reverse
 from pytils.translit import slugify
@@ -55,14 +57,18 @@ class MaterialUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
         return super().form_valid(form)
 
+
+
     def get_success_url(self):
         return reverse('materials:view', args=[self.kwargs.get('pk')])
 
-class MaterialDeleteView(UserPassesTestMixin, DeleteView):
+class MaterialDeleteView(PermissionRequiredMixin, DeleteView):
     model = Material
     success_url = reverse_lazy('materials:list')
+    permission_required = ['materials.change_material']
 
-    def test_func(self):
-        return self.get_object().owner == self.request.user or self.request.user.is_superuser \
-            or self.request.user.has_perms(['materials.delete_material'])
 
+
+class UserConfirmFailView(View):
+    """ Выводит информацию об успешной регистрации пользователя """
+    template_name = 'materials/not_delete_confirmed.html'

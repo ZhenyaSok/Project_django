@@ -18,8 +18,10 @@
                         <a href="{% url 'materials:edit' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-secondary">Edit</a>
                         {% endif %}
+                        {% if perms.materials.delete_material %}
                         <a href="{% url 'materials:delete' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-danger">Delete</a>
+                        {% endif %}
                     </div>
                 </div>
 
