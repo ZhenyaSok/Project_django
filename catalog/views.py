@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
+from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Category, Product, Version
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
@@ -63,16 +63,11 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('catalog:category_products', args=[self.object.category.pk])
 
-# class ProductCreateView(CreateView):
-#     model = Product
-#     fields = ('name', 'category',)
-#     success_url = reverse_lazy('catalog:categories')
 
-
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
-
+    permission_required = ['catalog.change_product']
 
     
     def get_context_data(self, **kwargs):
@@ -83,7 +78,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         else:
             formset = VersionFormset(instance=self.object)
         context_data['formset'] = formset
-        return  context_data
+        return context_data
     
     def form_valid(self, form):
         context_data = self.get_context_data()
@@ -96,15 +91,29 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         
         return super().form_valid(form)
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.owner != self.request.user and not self.request.user.is_staff:
+            raise Http404("Вы не являетесь владельцем этого товара")
+        return self.object
+
+    # def test_func(self):
+    #     return self.get_object().owner == self.request.user or self.request.user.is_superuser \
+    #         or self.request.user.has_perms(['catalog.change_product'])
+
 
     def get_success_url(self):
         return reverse('catalog:product_update', args=[self.kwargs.get('pk')])
 
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:categories')
+
+    def test_func(self):
+        return self.get_object().owner == self.request.user or self.request.user.is_superuser \
+            or self.request.user.has_perms(['catalog.delete_product'])
 
 def contacts(request):
     if request.method == 'POST':

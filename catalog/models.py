@@ -29,6 +29,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='пользователь')
+    is_published = models.BooleanField(default=False, verbose_name='статус публикации')
 
 
     def __str__(self):
@@ -49,13 +50,7 @@ class Version(models.Model):
     def __str__(self):
         return f'{self.product} ({self.name_version})'
 
-    """
-    Добавьте новую модель «Версия», которая должна содержать следующие поля:
-    продукт,
-    номер версии,
-    название версии,
-    признак текущей версии.
-    При наличии активной версии реализуйте вывод в список продуктов информации об активной версии."""
+
 
     class Meta:
         verbose_name = 'версия'

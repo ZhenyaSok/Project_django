@@ -14,8 +14,10 @@
                     <div class="btn-group">
                         <a href="{% url 'materials:view' object.pk %}"
                            class="btn btn-sm btn-outline-secondary">View</a>
+                        {% if perms.catalog.change_material %}
                         <a href="{% url 'materials:edit' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-secondary">Edit</a>
+                        {% endif %}
                         <a href="{% url 'materials:delete' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-danger">Delete</a>
                     </div>

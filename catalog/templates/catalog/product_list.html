@@ -13,8 +13,12 @@
                 <p class="card-text">{{ object.name }}</p>
                 <span class="text-muted">{{ object.owner|default:"Еще не было регистрации,тест" }}</span>
                 <div class="card-footer">
+                    {% if perms.catalog.change_product %}
                     <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' object.pk %}">Изменить</a>
+                    {% endif %}
+                    {% if user.is_superuser %}
                     <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' object.pk %}">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

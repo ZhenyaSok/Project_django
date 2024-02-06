@@ -3,6 +3,7 @@ from materials.models import Material
 from django.urls import reverse_lazy, reverse
 from pytils.translit import slugify
 from .func_send import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
 class MaterialCreateView(CreateView):
     model = Material
@@ -40,9 +41,10 @@ class MaterialDetailView(DetailView):
 
 
 
-class MaterialUpdateView(UpdateView):
+class MaterialUpdateView(PermissionRequiredMixin, UpdateView):
     model = Material
     fields = ('title', 'body')
+    permission_required = ['catalog.change_material']
     # success_url = reverse_lazy('materials:list')
 
     def form_valid(self, form):
