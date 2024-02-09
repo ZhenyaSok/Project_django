@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.forms import inlineformset_factory
 from django.http import Http404
 from django.shortcuts import render
@@ -6,7 +7,10 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Category, Product, Version
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, DetailView
+
+from catalog.services import get_categories_cache
+from config import settings
 
 
 class IndexView(TemplateView):
@@ -43,13 +47,28 @@ class ProductListView(ListView):
         category_item = Category.objects.get(pk=self.kwargs.get('pk'))
         context_data['category_pk'] = category_item.pk,
         context_data['title'] = f'{category_item.name}'
+        context_data['category_list'] = get_categories_cache()
 
         return context_data
 
 
-class ProductCreateView(LoginRequiredMixin, CreateView):
+class ProductDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Product
+    permission_required = ['catalog.view_product']
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['detail_list'] = get_categories_cache()
+
+
+        return context_data
+
+
+
+class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
+    # permission_required = ['catalog.add_product']
     success_url = reverse_lazy('catalog:categories')
     login_url = ('users:register')
 
@@ -64,10 +83,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return reverse('catalog:category_products', args=[self.object.category.pk])
 
 
-class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
-    permission_required = ['catalog.change_product']
+    # permission_required = ['catalog.change_product']
 
     
     def get_context_data(self, **kwargs):
@@ -129,3 +148,4 @@ def product_form(request):
     if request.method == 'POST':
 
         return render(request, 'catalog/product_form.html')
+

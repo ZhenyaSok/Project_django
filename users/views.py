@@ -1,19 +1,21 @@
 import random
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, TemplateView
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from config import settings, settings_local
+
 from users.forms import UserRegisterForm, UserForm
 from users.models import User
 from django.utils.encoding import force_bytes
 from django.views import View
 from django.contrib.auth import login
 from django.contrib.auth.views import PasswordResetDoneView
+
+from users.services import send_mail_password, send_mail_ready
 
 
 class LoginView(BaseLoginView):
@@ -41,12 +43,7 @@ class RegisterView(CreateView):
         activation_url = reverse_lazy('users:confirm_email', kwargs={'uidb64': uid, 'token': token})
 
         current_site = '127.0.0.1:8000'
-        send_mail(
-            subject='Почти готово!',
-            message=f"Завершите регистрацию, перейдя по ссылке: http://{current_site}{activation_url}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[new_user.email]
-        )
+        send_mail_ready(new_user.email, current_site, activation_url)
         return redirect('users:email_senting')
 
 
@@ -59,18 +56,25 @@ class UserUpdateView(UpdateView):
         return self.request.user
 
 
+# def generate_new_password(request):
+#     new_password = ''.join([str(random.randint(0, 9)) for _ in range(12)])
+#     send_mail(
+#         subject='Вы сменили пароль',
+#         message=f'Ваш пароль: {new_password}!',
+#         from_email=settings.EMAIL_HOST_USER,
+#         recipient_list=[request.user.email]
+#     )
+#     request.user.set_password(new_password)
+#     request.user.save()
+#     return redirect(reverse('catalog:index_main'))
+
+
 def generate_new_password(request):
     new_password = ''.join([str(random.randint(0, 9)) for _ in range(12)])
-    send_mail(
-        subject='Вы сменили пароль',
-        message=f'Ваш пароль: {new_password}!',
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[request.user.email]
-    )
     request.user.set_password(new_password)
     request.user.save()
+    send_mail_password(request.user.email, new_password)
     return redirect(reverse('catalog:index_main'))
-
 
 
 

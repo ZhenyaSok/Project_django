@@ -1,0 +1,42 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="col-12">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Информация о продукте
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top"
+                         src="{{ object.photo|mymedia }}"
+                         alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ object.name }}</h5>
+                        <p class="card-text">{{ object.overview }}</p>
+                        <a href="{% url 'catalog:categories' %}" class="btn btn-primary">Вернуться к категориям
+                            товаров</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                Версия
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for version in versions %}
+                        <li>{{ version }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
